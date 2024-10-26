@@ -1,0 +1,82 @@
+buildscript {
+    ext.kotlin_version = '1.9.0'
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        // Kotlin Gradle Plugin
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // Android Tools Build Gradle Plugin (Compatible with Gradle 8.x)
+        classpath 'com.android.tools.build:gradle:8.1.1'
+
+        // Google services plugin for Firebase integration
+        classpath 'com.google.gms:google-services:4.4.2'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// Set up common build directories
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    project.evaluationDependsOn(':app')
+}
+
+// Register a clean task to delete the build directory
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
+
+//buildscript {
+//    ext.kotlin_version = '1.9.0'
+//
+//    repositories {
+//        google()
+//        mavenCentral()
+//    }
+//
+//    dependencies {
+//        // Kotlin Gradle Plugin
+//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+//
+//        // Android Tools Build Gradle Plugin (Compatible with Gradle 8.x)
+//        classpath 'skn.android.tools.build:gradle:8.1.0'
+//    }
+//    plugins {
+//        // ...
+//
+//        // Add the dependency for the Google services Gradle plugin
+//        id 'com.google.gms.google-services' version '4.4.2' apply false
+//
+//    }
+//}
+//
+//allprojects {
+//    repositories {
+//        google()
+//        mavenCentral()
+//    }
+//}
+//
+//// Set up common build directories
+//rootProject.buildDir = '../build'
+//subprojects {
+//    project.buildDir = "${rootProject.buildDir}/${project.name}"
+//    project.evaluationDependsOn(':app')
+//}
+//
+//// Register a clean task to delete the build directory
+//tasks.register("clean", Delete) {
+//    delete rootProject.buildDir
+//}

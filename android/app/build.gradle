@@ -1,0 +1,268 @@
+plugins {
+    id "com.android.application"
+    id "com.google.gms.google-services"  // Firebase integration
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+import java.util.Properties
+import java.io.FileInputStream
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode', '1')
+def flutterVersionName = localProperties.getProperty('flutter.versionName', '1.0')
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace "skn.gyan.buddy"
+    compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11  // Targeting Java 11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << "-Xlint:deprecation"
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'  // Set Kotlin to JVM 11
+    }
+
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = false
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "skn.gyan.buddy"
+        minSdkVersion 23
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true  // Enable multidex for large projects
+    }
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false  // Disable minification for easier debugging
+            shrinkResources false
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'  // Handle multidex if required
+    implementation platform('com.google.firebase:firebase-bom:33.4.0')  // Firebase BOM
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+}
+//plugins {
+//    id 'com.android.application'             // Fixed plugin
+//    id 'com.google.gms.google-services'      // Corrected for Firebase integration
+//    id 'kotlin-android'
+//    id 'dev.flutter.flutter-gradle-plugin'
+//}
+//
+//import java.util.Properties
+//import java.io.FileInputStream
+//
+//def localProperties = new Properties()
+//def localPropertiesFile = rootProject.file('local.properties')
+//if (localPropertiesFile.exists()) {
+//    localPropertiesFile.withReader('UTF-8') { reader ->
+//        localProperties.load(reader)
+//    }
+//}
+//
+//def flutterVersionCode = localProperties.getProperty('flutter.versionCode', '1')
+//def flutterVersionName = localProperties.getProperty('flutter.versionName', '1.0')
+//
+//def keystoreProperties = new Properties()
+//def keystorePropertiesFile = rootProject.file('key.properties')
+//if (keystorePropertiesFile.exists()) {
+//    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+//}
+//
+//android {
+//    namespace "skn.gyan.buddy"   // Corrected package name
+//    compileSdkVersion flutter.compileSdkVersion    // Ensure you use the latest compatible SDK version
+//    ndkVersion flutter.ndkVersion
+//
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_11
+//        targetCompatibility JavaVersion.VERSION_11
+//    }
+//
+//    kotlinOptions {
+//        jvmTarget = '11'
+//    }
+//
+//    dependenciesInfo {
+//        includeInApk = false
+//        includeInBundle = false
+//    }
+//
+//    sourceSets {
+//        main.java.srcDirs += 'src/main/kotlin'
+//    }
+//
+//    defaultConfig {
+//        applicationId "skn.gyan.buddy"     // Corrected application ID
+//        minSdkVersion 21
+//        targetSdkVersion flutter.targetSdkVersion
+//        versionCode flutterVersionCode.toInteger()
+//        versionName flutterVersionName
+//        multiDexEnabled true               // Keep multidex enabled for large projects
+//    }
+//
+//    signingConfigs {
+//        release {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+//            storePassword keystoreProperties['storePassword']
+//        }
+//    }
+//
+//    buildTypes {
+//        release {
+//            signingConfig signingConfigs.release
+//            minifyEnabled false            // Disable for easier debugging
+//            shrinkResources false
+//        }
+//    }
+//}
+//
+//flutter {
+//    source '../..'
+//}
+//
+//dependencies {
+//    implementation 'androidx.multidex:multidex:2.0.1'  // Multidex dependency
+//    implementation platform('com.google.firebase:firebase-bom:33.4.0')
+//    implementation 'com.google.firebase:firebase-analytics'
+//}
+
+//plugins {
+//    id 'com.android.application'
+//    id 'com.google.gms.google-services'  // For Firebase integration
+//    id 'kotlin-android'
+//    id 'dev.flutter.flutter-gradle-plugin'
+//}
+//
+//
+//// Add necessary imports here
+//import java.util.Properties
+//import java.io.FileInputStream
+//
+//def localProperties = new Properties()
+//def localPropertiesFile = rootProject.file('local.properties')
+//if (localPropertiesFile.exists()) {
+//    localPropertiesFile.withReader('UTF-8') { reader ->
+//        localProperties.load(reader)
+//    }
+//}
+//
+//def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+//if (flutterVersionCode == null) {
+//    flutterVersionCode = '1'
+//}
+//
+//def flutterVersionName = localProperties.getProperty('flutter.versionName')
+//if (flutterVersionName == null) {
+//    flutterVersionName = '1.0'
+//}
+//def keystoreProperties = new Properties()
+//def keystorePropertiesFile = rootProject.file('key.properties')
+//if (keystorePropertiesFile.exists()) {
+//    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+//}
+//
+//android {
+//    namespace "skn.gyan.buddy"
+//    compileSdkVersion flutter.compileSdkVersion
+//    ndkVersion flutter.ndkVersion
+//
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_11  // Updated to Java 11
+//        targetCompatibility JavaVersion.VERSION_11  // Updated to Java 11
+//    }
+//
+//    kotlinOptions {
+//        jvmTarget = '11'  // Updated Kotlin to target JVM 11
+//    }
+//
+//    dependenciesInfo {
+//        includeInApk = false
+//        includeInBundle = false
+//    }
+//
+//    sourceSets {
+//        main.java.srcDirs += 'src/main/kotlin'
+//    }
+//
+//    defaultConfig {
+//        applicationId "skn.gyan.buddy"
+//        minSdkVersion 21
+//        targetSdkVersion flutter.targetSdkVersion
+//        versionCode flutterVersionCode.toInteger()
+//        versionName flutterVersionName
+//        multiDexEnabled true
+//    }
+//
+//    signingConfigs {
+//        release {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+//            storePassword keystoreProperties['storePassword']
+//        }
+//    }
+//
+//    buildTypes {
+//        release {
+//            signingConfig signingConfigs.release
+//        }
+//    }
+//}
+//
+//flutter {
+//    source '../..'
+//}
+//
+//dependencies {
+//    implementation 'androidx.multidex:multidex:2.0.1'  // Updated multidex version
+//}
